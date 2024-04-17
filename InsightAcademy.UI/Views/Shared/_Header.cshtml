@@ -1,0 +1,208 @@
+﻿@using InsightAcademy.ApplicationLayer.Repository
+@using System.Security.Claims
+@using InsightAcademy.DomainLayer.Entities.Identity
+@using InsightAcademy.InfrastructureLayer.Data.Seed
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager;
+
+@inject IUser _user;
+@functions {
+    public async Task<string> GetUserProfileImage(string userId)
+    {
+        var profileImage = await _user.GetTutorProfileImage(userId);
+        return !string.IsNullOrEmpty(profileImage) ? $"/{profileImage}" : "/images/profile/img-01.jpg";
+    }
+}
+<header class="tu-header">
+    <nav class="navbar navbar-expand-xl tu-navbar">
+        <div class="container-fluid">
+            <strong>
+                <a class="navbar-brand" href="/"><img src="/images/logo.png" alt="Logo"></a>
+            </strong>
+            <button class="tu-menu" aria-label="Main Menu" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse">
+                <i class="icon icon-menu"></i>
+            </button>
+            <div class="collapse navbar-collapse tu-themenav" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        @if (1==1)
+                        {
+                            <a class="nav-link" asp-controller="Student" asp-action="MyWishList">
+                                Wishlist
+                                <span class="tu-tag">NEW</span>
+                            </a>
+                        }
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tutor/AllTutor">
+                            Online classes
+                            <span class="tu-tag">NEW</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="SearchListing">Learning material<span class="tu-tag tu-bggreen">FREE</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tu-sucesstorsection">Success stories</a>
+                    </li>
+                    <li class="menu-item-has-children nav-item">
+                        <a class="active" href="javascript:void(0);">Pages</a>
+                        <ul class="sub-menu">
+                            <li class="menu-item-has-children">
+                                <a href="javascript:void(0)">Home Pages</a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="index.html">Home</a>
+                                    </li>
+                                    <li>
+                                        <a href="index-without-login.html">Home v2 <em class="tu-menutag">without login</em></a>
+                                    </li>
+                                    <li>
+                                        <a href="indexv2.html">Home v3</a>
+                                    </li>
+                                    <li>
+                                        <a href="indexv3.html">Home v4</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="javascript:void(0)">Provider listings</a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="search-listing.html">Provider listings v1</a>
+                                    </li>
+                                    <li>
+                                        <a href="search-listing-two.html">Provider listings v2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="tutor-detail.html">Tutor Detail</a>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="javascript:void(0);">Blogs</a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="blog-grid-left.html">Blog list</a>
+                                    </li>
+                                    <li>
+                                        <a href="blog-grid-right.html">Blog list <em class="tu-menutag">Right sidebar</em></a>
+                                    </li>
+                                    <li>
+                                        <a href="blog-detail-left.html">Blog detail</a>
+                                    </li>
+                                    <li>
+                                        <a href="blog-detail-right.html">Blog detail <em class="tu-menutag">Right sidebar</em></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="javascript:void(0);">Other pages</a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="how-it-work.html">How it work</a>
+                                    </li>
+                                    <li>
+                                        <a href="package.html">Packges</a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html">Login</a>
+                                    </li>
+                                    <li>
+                                        <a href="signup.html">Sign up</a>
+                                    </li>
+                                    <li>
+                                        <a href="lost-password.html">Lost password</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <ul class="nav-item tu-afterlogin">
+                <li>
+                    <a class="nav-link" href="index.html"><span class="icon icon-message-square"><i class="tu-messagenoti">4</i></span></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="index.html"><span class="icon icon-bell"><i class="tu-messagenoti">3</i></span></a>
+                </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="menu-item-has-children">
+                        <strong><a class="nav-link" href="javascript:void(0);">
+                                <img src="@await GetUserProfileImage(User.FindFirstValue(ClaimTypes.NameIdentifier))" alt="image-description">
+                            </a></strong>
+                        <ul class="sub-menu">
+                            @if (User.IsInRole(Roles.Teacher))
+                            {
+                                <li>
+                                    <a href="/Tutor/PersonalDetails"><i class="icon icon-user"></i>Personal details</a>
+                                </li>
+                                <li>
+                                    <a href="/Tutor/ContactDetail"><i class="icon icon-user"></i>Contact</a>
+                                </li>
+                                <li>
+                                    <a href="/Tutor/Education"><i class="icon icon-user"></i>Education</a>
+                                </li>
+                                <li>
+                                    <a href="/Tutor/Subjects"><i class="icon icon-user"></i>Subject</a>
+                                </li>
+                                <li>
+                                    <a href="/Tutor/Media"><i class="icon icon-user"></i>Media</a>
+                                </li>
+                            }
+                          <li>
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                </form>
+                          </li>
+                          @*======================================= Student drop down============================== *@
+
+                           @*  <li>
+                                <a href="profile-setting-b.html"><i class="icon icon-phone"></i>Contact details</a>
+                            </li>
+                            <li>
+                                <a href="profile-setting-c.html"><i class="icon icon-book"></i>Education</a>
+                            </li>
+                            <li>
+                                <a href="profile-setting-d.html"><i class="icon icon-book-open"></i>Subjects I can teach</a>
+                            </li>
+                            <li>
+                                <a href="profile-setting-e.html"><i class="icon icon-image"></i>Media gallery</a>
+                            </li> *@
+                        </ul>
+                        @*======================================= Student drop down============================== *@
+
+                        <ul class="sub-menu">
+                            @if (User.IsInRole(Roles.Student))
+                            {
+                                <li>
+                                    <a href="/Student/PersonalDetails"><i class="icon icon-user"></i>Personal details</a>
+                                </li>
+                                <li>
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                    </form>
+                                </li>
+
+                            }
+                        
+                        </ul>
+                    </li>
+                }
+
+                else
+                {
+                    <partial name="_LoginPartial"></partial>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+
+
+
+
+

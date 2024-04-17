@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Tutor>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Teacher List</h1>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Hourly Rate</th>
+                <th scope="col">Website</th>
+                <th scope="col">Country</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Skype ID</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int counter = 1;
+                foreach (var data in Model)
+                {
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>@data.FullName</td>
+                        <td>@data.EmailAddress</td>
+                        <td>@data.HourlyRate</td>
+                        <td>@data.Website</td>
+                        <td>@data.Country</td>
+                        <td>@data.PhoneNumber</td>
+                        <td>@data.SkypeId</td>
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                @if (!data.IsVerified)
+                                {
+                                    <button type="button" class="btn btn-primary mx-2 approve-btn" data-tutor-id="@data.Id">
+                                        <i class="bi bi-pencil-square">Approve</i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-danger mx-2 unapprove-btn" data-tutor-id="@data.Id">
+                                        <i class="bi bi-trash-fill">Unapprove</i>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    counter++;
+                }
+            }
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $('.approve-btn').click(function () {
+                var tutorId = $(this).data('tutor-id');
+                approveTutor(tutorId);
+            });
+
+            $('.unapprove-btn').click(function () {
+                var tutorId = $(this).data('tutor-id');
+                unapproveTutor(tutorId);
+            });
+
+            function approveTutor(tutorId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/dashboard/approve",
+                    data: { tutorId: tutorId },
+                    success: function (data) {
+                        console.log("Tutor approved successfully.");
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error approving tutor:", error);
+                        // Optionally show an error message
+                    }
+                });
+            }
+
+            function unapproveTutor(tutorId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/dashboard/unapprove",
+                    data: { tutorId: tutorId },
+                    success: function (data) {
+                        console.log("Tutor unapproved successfully.");
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error unapproving tutor:", error);
+                        // Optionally show an error message
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿@using InsightAcademy.ApplicationLayer.Repository
+@using InsightAcademy.InfrastructureLayer.Data.Seed
+@using System.Security.Claims
+@inject IUser _user;
+@functions {
+    public async Task<string> GetUserProfileImage(string userId)
+    {
+        var profileImage = await _user.GetTutorProfileImage(userId);
+        return !string.IsNullOrEmpty(profileImage) ? $"/{profileImage}" : "/images/profile/img-01.jpg";
+    }
+}
+<html class="no-js" lang="zxx">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BootStrap HTML5 CSS3 Theme</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" href="~/images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="/css/feather.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" href="/css/fontawesome/fontawesome.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" href="/css/select2.min.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" href="/css/splide.min.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" href="/css/main.css"> <!-- Adjust path if necessary -->
+    <link rel="stylesheet" href="/css/lightpick.css">
+    <link rel="stylesheet" href="/css/venobox.min.css">
+    <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <partial name="_Header"></partial>
+
+    <main class="tu-main tu-bgmain">
+        <div class="tu-main-section">
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-xl-3">
+                        <aside class="tu-asider-holder">
+                            <div class="tu-asidebox">
+                                <figure>
+                                    <img src="@await GetUserProfileImage(User.FindFirstValue(ClaimTypes.NameIdentifier))" alt="image-description">
+   
+                                    <figcaption class="tu-uploadimage">
+                                        <input type="file" id="dropbox" name="dropbox">
+                                        <label for="dropbox"><i class="icon icon-camera"></i></label>
+                                    </figcaption>
+                                </figure>
+                                <div class="tu-uploadinfo text-center">
+                                    <h6>
+                                        Your profile photo should not be larger that 500px X 500px & weight should not exceede 100kb
+                                    </h6>
+                                    <div class="tu-uploadimgbtn">
+
+                                        <input type="file" name="file" class="tu-primbtn" id="uploadimg">
+                                        <label for="uploadimg" class="tu-primbtn">Upload photo</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="tu-side-tabs">
+                                <li class="nav-item ">
+                                    <a asp-controller="Tutor" asp-action="PersonalDetails" class="active nav-link"><i class="icon icon-user"></i><span>Personal details</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Tutor" asp-action="ContactDetail" class="nav-link"><i class="icon icon-phone"></i><span>Contact details</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Tutor" asp-action="Education" class="nav-link"><i class="icon icon-book"></i><span>Education</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Tutor" asp-action="Subjects" class="nav-link"><i class="icon icon-book-open"></i><span>Subjects I can teach</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Tutor" asp-action="Media" class="nav-link"><i class="icon icon-image"></i><span>Media gallery</span></a>
+                                </li>
+                            </ul>
+                        </aside>
+                    </div>
+                    <div class="col-lg-8 col-xl-9">
+                        <div class="tu-profilewrapper">
+                            <div class="tu-boxitem">
+                                <div class="tu-alertcontent">
+                                    <h4>Buy package to add more details</h4>
+                                    <p>
+                                        Dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sintem.
+                                    </p>
+                                </div>
+                                <div class="tu-btnrea">
+                                    <a href="package.html" class="tu-primbtn tu-btngreen"><span>Buy a new package</span><i class="icon icon-lock"></i></a>
+                                </div>
+                            </div>
+                            <div class="tu-boxwrapper">
+                                <div class="tu-boxarea">
+                                    @RenderBody()
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="/js/vendor/jquery.min.js"></script>
+    <script src="/js/vendor/popper-core.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/vendor/appear.js"></script>
+    <script src="/js/vendor/countTo.js"></script>
+    <script src="/js/vendor/splide.min.js"></script>
+    <script src="/js/vendor/select2.min.js"></script>
+    <script src="/js/vendor/tippy.js"></script>
+    <script src="/js/vendor/typed.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('#uploadimg').change(function (e) {
+                e.preventDefault();
+
+                var formData = new FormData();
+                formData.append('profilePic', $('#uploadimg')[0].files[0]);
+
+                $.ajax({
+                    url: '@Url.Action("UploadProfilePic", "Tutor")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.status == true) {
+                            window.location.reload();
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error uploading image: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<WishList>
+@{
+    ViewData["Title"] = "GetAllWishList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-xl-8 col-xxl-9" style="margin-left: 15%; margin-top:2% ; margin-bottom:2%">
+    <div class="tu-listinginfo-holder">
+@foreach (var item in Model)
+{
+    <partial name="_TutorList" model="item.Tutor" />
+}
+</div>
+</div>
+@* <div class="col-xl-8 col-xxl-9" style="margin-left: 15%; margin-top:2% ; margin-bottom:2%">
+    <div class="tu-listinginfo-holder">
+        @if(Model!=null && Model.Count()>0)
+        {
+
+        @foreach (var TeacherList in Model)
+        {
+            <div class="tu-listinginfo">
+                <span class="tu-cardtag"></span>
+                <div class="tu-listinginfo_wrapper">
+                    <div class="tu-listinginfo_title">
+                        <div class="tu-listinginfo-img">
+                            <figure>
+                                <img src="/@TeacherList.Tutor.ApplicationUser.ProfileImageUrl" width="70" height="70" alt="imge">
+                            </figure>
+                            <div class="tu-listing-heading">
+                                <h5><a href="tutor-detail.html">@TeacherList.Tutor.FullName</a> <i class="icon icon-check-circle tu-greenclr" data-tippy-trigger="mouseenter" data-tippy-html="#tu-verifed" data-tippy-interactive="true" data-tippy-placement="top"></i></h5>
+                                <div class="tu-listing-location">
+                                    <span>5.0 <i class="fa-solid fa-star"></i><em>(4,448)</em></span><address><i class="icon icon-map-pin"></i> @TeacherList.Tutor.City</address>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tu-listinginfo_price">
+                            <span>Starting from:</span>
+                            <h4>$@TeacherList.Tutor.HourlyRate</h4>
+                        </div>
+                    </div>
+                    <div class="tu-listinginfo_description">
+                        <p>@TeacherList.Tutor.Introduction</p>
+                    </div>
+                    <div class="tu-listinginfo_service">
+                        <h6>You can get teaching service direct at</h6>
+                        @foreach (var services in TeacherList.Tutor.Services.Split(","))
+                        {
+                            <ul class="tu-service-list">
+                                <li>
+                                    <span>
+                                        <i class="icon icon-home tu-greenclr"></i>
+                                        @services
+                                    </span>
+
+                            </ul>
+                        }
+
+                    </div>
+                </div>
+                <div class="tu-listinginfo_btn">
+                    <div class="tu-iconheart">
+                        @if (TeacherList.Tutor.WishLists.Count > 0)
+                        {
+
+                            <i class="icon icon-heart tu-colorred"></i>
+
+                            <span>Saved</span>
+                        }
+                        else
+                        {
+                            <i class="icon icon-heart"></i>
+
+                            <span onclick="addToWishList('@TeacherList.Tutor.Id')">Add to save</span>
+                        }
+
+                    </div>
+                    <div class="tu-btnarea">
+                        <a href="login.html" class="tu-secbtn">Let’s chat</a>
+                        <a asp-controller="Tutor" asp-action="ProfileView" asp-route-tutorid="@TeacherList.Tutor.Id" class="tu-primbtn">View full profile</a>
+                    </div>
+                </div>
+            </div>
+            }
+        }
+        else
+        {
+            <p>No wishlist found!</p>
+        }
+    </div>
+</div> *@
+
